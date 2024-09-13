@@ -70,7 +70,7 @@ public class Song implements Comparable {
     public String toString() {
         StringBuilder str = new StringBuilder();
         
-        str.append(String.format("%s, \"%s\", \n\"%s\"", this.artist, this.title, this.lyrics));
+        str.append(String.format("%s, \"%s\", \n%s", this.artist, this.title, this.lyrics));
         
         return str.toString();
     }
