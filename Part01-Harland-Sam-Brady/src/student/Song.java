@@ -3,8 +3,7 @@
  * **********************************************************************
  *                     Revision History (newest first)
  ************************************************************************
- * 09/12/2024 Harland Norcott - Implemented Song class, including 
- * compareTo and toString
+ *
  * 8.2016 - Anne Applin - formatting and JavaDoc skeletons added   
  * 2015 -   Prof. Bob Boothe - Starting code and main for testing  
  ************************************************************************
@@ -21,10 +20,6 @@ import java.util.*;
  */
 public class Song implements Comparable {
     // private fields
-    
-    private String artist;
-    private String lyrics;
-    private String title;
 
     /**
      * Parameterized constructor
@@ -33,9 +28,6 @@ public class Song implements Comparable {
      * @param lyrics the lyrics as a string with linefeeds embedded
      */
     public Song(String artist, String title, String lyrics) {
-        this.artist = artist;
-        this.lyrics = lyrics;
-        this.title = title;
     }
 
     /**
@@ -43,7 +35,6 @@ public class Song implements Comparable {
      * @return
      */
     public String getArtist() {
-        return this.artist;
     }
 
     /**
@@ -51,7 +42,6 @@ public class Song implements Comparable {
      * @return
      */
     public String getLyrics() {
-        return this.lyrics;
     }
 
     /**
@@ -59,7 +49,6 @@ public class Song implements Comparable {
      * @return
      */
     public String getTitle() {
-        return this.title;
     }
 
     /**
@@ -68,11 +57,6 @@ public class Song implements Comparable {
      * @return a formatted string with comma and quotes added
      */
     public String toString() {
-        StringBuilder str = new StringBuilder();
-        
-        str.append(String.format("%s, \"%s\", \n%s", this.artist, this.title, this.lyrics));
-        
-        return str.toString();
     }
 
     /**
@@ -89,11 +73,9 @@ public class Song implements Comparable {
      */
     @Override
     public int compareTo(Object that) {
-        int compareVar = this.toString().compareToIgnoreCase(that.toString());
-        
-        return compareVar;
     }
-    
+
+ \
     /**
      * testing method to unit test this class
      * @param args
