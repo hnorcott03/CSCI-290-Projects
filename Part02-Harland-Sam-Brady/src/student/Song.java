@@ -3,6 +3,7 @@
  * **********************************************************************
  *                     Revision History (newest first)
  ************************************************************************
+ * 09/23/2024 Brady Roy - Created a nested comparator class
  * 09/12/2024 Harland Norcott - Implemented Song class, including 
  * compareTo and toString
  * 8.2016 - Anne Applin - formatting and JavaDoc skeletons added   
@@ -92,6 +93,17 @@ public class Song implements Comparable {
         
         return compareVar;
     }
+
+    /**
+     * Nested static comparator class for comparing songs by artist.
+     * This compares two Song objects based on their artist fields, ignoring case.
+     */
+    public static class CmpArtist implements Comparator<Song> {
+        @Override
+        public int compare(Song s1, Song s2) {
+            return s1.getArtist().compareToIgnoreCase(s2.getArtist());
+        }
+    }
     
     /**
      * testing method to unit test this class
@@ -136,5 +148,12 @@ public class Song implements Comparable {
         System.out.println("Song1 vs Song3 = " + s1.compareTo(s3));
         System.out.println("Song3 vs Song1 = " + s3.compareTo(s1));
         System.out.println("Song1 vs Song1 = " + s1.compareTo(s1));
+
+        // Testing CmpArtist comparator
+        System.out.println("\nTesting CmpArtist comparator:");
+        CmpArtist cmpArtist = new CmpArtist();
+        System.out.println("Song1 vs Song2 (by artist) = " + cmpArtist.compare(s1, s2)); // Expected: Positive
+        System.out.println("Song2 vs Song1 (by artist) = " + cmpArtist.compare(s2, s1)); // Expected: Negative
+        System.out.println("Song1 vs Song3 (by artist) = " + cmpArtist.compare(s1, s3)); // Expected: 0 (same artist)
     }
 }
