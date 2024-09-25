@@ -89,6 +89,13 @@ public class SearchByArtistPrefix {
                 matchingSongs.add(songs[index]);
             }
         }
+        else {
+            int index = (searchResult * -1) + 1;
+            while (index + 1 < songs.length && songs[index + 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
+                ++index;
+                matchingSongs.add(songs[index]);
+            }
+        }
         // else? - J
         // Partial match is two's compliment: index = -(searchResult + 1) - J
         // index gets the position for two's compliment of searchResult and loops
