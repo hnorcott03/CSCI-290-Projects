@@ -15,18 +15,21 @@ package student;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
+
 /**
- * Search by Artist Prefix searches the artists in the song database 
+ * Search by Artist Prefix searches the artists in the song database
  * for artists that begin with the input String
- * @author Bob Booth 
+ * 
+ * @author Bob Booth
  */
 
 public class SearchByArtistPrefix {
     // keep a local direct reference to the song array
-    private Song[] songs;  
+    private Song[] songs;
 
     /**
      * constructor initializes the property. [Done]
+     * 
      * @param sc a SongCollection object
      */
     public SearchByArtistPrefix(SongCollection sc) {
@@ -36,25 +39,80 @@ public class SearchByArtistPrefix {
     /**
      * find all songs matching artist prefix uses binary search should operate
      * in time log n + k (# matches)
-     * converts artistPrefix to lowercase and creates a Song object with 
+     * converts artistPrefix to lowercase and creates a Song object with
      * artist prefix as the artist in order to have a Song to compare.
      * walks back to find the first "beginsWith" match, then walks forward
      * adding to the arrayList until it finds the last match.
      *
      * @param artistPrefix all or part of the artist's name
-     * @return an array of songs by artists with substrings that match 
-     *    the prefix
+     * @return an array of songs by artists with substrings that match
+     *         the prefix
      */
     public Song[] search(String artistPrefix) {
         // write this method
+        /*
+         * searchResult holds the idx of found match from Arrays.binarySearch()
+         * matchingSongs holds all song matches (starts empty)
+         * artistPrefix gets made lowercase to help with case-insensitivity
+         * - Jemma
+         */
+        int searchResult;
+        ArrayList matchingSongs = new ArrayList();
+        artistPrefix = artistPrefix.toLowerCase();
+
+        Song.CmpArtist comp = new Song.CmpArtist();
+
+        Song key = new Song(artistPrefix, "", "");
+
+        // put return value from binarySearch
+        /*
+         * Arrays.binarySearch returns the positive index an exact match was found or
+         * the two's compliment of the insertion point (for our case it should be the
+         * first prefix match)
+         * - Jemma
+         */
+        searchResult = Arrays.binarySearch(songs, key, comp);
+        // If an exact match was found (searchResult is not negative) - J
+        if (searchResult > -1) {
+            // Add the current song to matching songs - J
+            matchingSongs.add(songs[searchResult]);
+            // index gets the position for searchResult and loops backwards for matches - J
+            int index = searchResult;
+            while (index > 0 && songs[index - 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
+                --index;
+                matchingSongs.add(songs[index]);
+            }
+            // index gets the position for searchResult and loops forwards for matches - J
+            index = searchResult;
+            while (index < songs.length && songs[index].getArtist().toLowerCase().startsWith(artistPrefix)) {
+                ++index;
+                matchingSongs.add(songs[index]);
+            }
+        }
+        else {
+            int index = (searchResult * -1) + 1;
+            while (index + 1 < songs.length && songs[index + 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
+                ++index;
+                matchingSongs.add(songs[index]);
+            }
+        }
+        // else? - J
+        // Partial match is two's compliment: index = -(searchResult + 1) - J
+        // index gets the position for two's compliment of searchResult and loops
+        // forwards for matches - J
+
+        return (Song[]) matchingSongs.toArray(Song[]::new);
     }
 
     /**
      * testing method for this unit
-     * @param args  command line arguments set in Project Properties - 
-     * the first argument is the data file name and the second is the partial 
-     * artist name, e.g. be which should return beatles, beach boys, bee gees,
-     * etc.
+     * 
+     * @param args command line arguments set in Project Properties -
+     *             the first argument is the data file name and the second is the
+     *             partial
+     *             artist name, e.g. be which should return beatles, beach boys, bee
+     *             gees,
+     *             etc.
      */
     public static void main(String[] args) {
         if (args.length == 0) {
