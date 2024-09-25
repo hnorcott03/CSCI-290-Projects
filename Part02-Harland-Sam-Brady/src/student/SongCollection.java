@@ -53,9 +53,9 @@ public class SongCollection {
             fileScnr.useDelimiter("ARTIST=|TITLE=|LYRICS=");
 
             while (fileScnr.hasNext()) {
-                artist = fileScnr.next();
-                title = fileScnr.next();
-                lyrics = fileScnr.next();
+                artist = fileScnr.next().replace("\"", "").trim();
+                title = fileScnr.next().replace("\"", "").trim();
+                lyrics = fileScnr.next().replace("\"", "").trim();;
                 song = new Song(artist, title, lyrics);
                 songList.add(song);
 
