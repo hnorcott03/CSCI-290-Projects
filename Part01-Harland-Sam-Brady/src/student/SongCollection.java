@@ -89,10 +89,10 @@ public class SongCollection {
             return;
         }
         SongCollection sc = new SongCollection(args[0]);
-
+        
         // todo: show song count
         Song[] list = sc.getAllSongs();
         System.out.println("Total songs: " + list.length + ", first songs: ");
-        Stream.of(list).forEach(System.out::println);
+        Stream.of(list).limit(10).forEach(System.out::println);
     }
 }
