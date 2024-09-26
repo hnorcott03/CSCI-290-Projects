@@ -3,6 +3,8 @@
  * **********************************************************************
  *                     Revision History (newest first)
  ************************************************************************
+ * 09/26/2024 Sam Gatchell - added javadoc
+ * 09/25/2024 Sam Gatchell - updated CmpArtist class
  * 09/23/2024 Brady Roy - Created a nested comparator class
  * 09/12/2024 Harland Norcott - Implemented Song class, including
  * compareTo and toString

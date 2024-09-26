@@ -3,7 +3,8 @@
  *****************************************************************************
  *                       Revision History
  *****************************************************************************
- *
+ * 09/26/2024 updated search methods - added javadoc
+ * 09/25/2024 - updated search and main methods
  * 8/2015 Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  *****************************************************************************
@@ -144,7 +145,7 @@ public class SearchByArtistPrefix {
         SongCollection sc = new SongCollection(args[0]);
         SearchByArtistPrefix sbap = new SearchByArtistPrefix(sc);
 
-        if (args.length != 0) {
+        if (args.length >= 0) {
             System.out.println("searching for: " + args[1]);
             Song[] byArtistResult = sbap.search(args[1]);
 
