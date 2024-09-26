@@ -128,6 +128,7 @@ public class SearchByArtistPrefix {
         System.out.println("log_{2}(n) = " + log);
         System.out.println("Theorectial complexity k + log(n): "
                 + (matchingSongs.size() + log));
+        System.out.println();
 
         return (Song[]) matchingSongs.toArray(Song[]::new);
     }
@@ -140,19 +141,17 @@ public class SearchByArtistPrefix {
      * e.g. be which should return beatles, beach boys, bee gees, etc.
      */
     public static void main(String[] args) {
-        System.out.println(args[0]);
         if (args.length == 0) {
             System.err.println("usage: prog songfile [search string]");
             return;
         }
-
         SongCollection sc = new SongCollection(args[0]);
         SearchByArtistPrefix sbap = new SearchByArtistPrefix(sc);
 
         if (args.length >= 1) {
             System.out.println("searching for: " + args[1]);
             Song[] byArtistResult = sbap.search(args[1]);
-
+            System.out.println("Total matches: " + byArtistResult.length);
             Stream.of(byArtistResult).limit(10).forEach(System.out::println);
         }
     }
