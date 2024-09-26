@@ -77,7 +77,6 @@ public class SearchByArtistPrefix {
                 + ((CmpCnt) comp).getCmpCnt());
 
         //finds front from negative binary search result
-        //int i = searchResult;
         if (searchResult < 0) {
             searchResult = -searchResult - 1;
         }
