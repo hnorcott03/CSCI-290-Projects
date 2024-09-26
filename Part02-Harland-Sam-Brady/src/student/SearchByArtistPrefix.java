@@ -3,8 +3,7 @@
  *****************************************************************************
  *                       Revision History
  *****************************************************************************
- * 09/26/2024 updated search methods - added javadoc
- * 09/25/2024 - updated search and main methods
+ *
  * 8/2015 Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  *****************************************************************************
@@ -78,43 +77,48 @@ public class SearchByArtistPrefix {
 
         //finds front from negative binary search result
         if (searchResult < 0) {
-            searchResult = -searchResult - 1;
+            //gets index from bitwise result
+            searchResult = ~searchResult;
         }
         //outputs front
         System.out.println("Front found at " + searchResult);
 
         // If an exact match was found (searchResult is not negative) - J
-        if (searchResult > -1) {
-            // Add the current song to matching songs - J
-            matchingSongs.add(songs[searchResult]);
-            // index gets the position for searchResult and loops backwards for matches - J
-            int index = searchResult;
-            while (index > 0 && songs[index - 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
-                --index;
-                counter++;
-                matchingSongs.add(songs[index]);
-            }
-            // index gets the position for searchResult and loops forwards for matches - J
-            index = searchResult;
-            while (index < songs.length && songs[index].getArtist().toLowerCase().startsWith(artistPrefix)) {
-                ++index;
-                counter++;
-                matchingSongs.add(songs[index]);
-            }
-        } /* else {
+        //if (searchResult > 0) {
+        // Add the current song to matching songs - J
+        matchingSongs.add(songs[searchResult]);
+        // index gets the position for searchResult and loops backwards for matches - J
+        int index = searchResult;
+        while (index > 0 && songs[index - 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
+            --index;
+            counter++;
+            matchingSongs.add(songs[index]);
+        }
+        // index gets the position for searchResult and loops forwards for matches - J
+        index = searchResult;
+
+        while (index < songs.length && songs[index].getArtist().toLowerCase().startsWith(artistPrefix)) {
+            ++index;
+            counter++;
+            matchingSongs.add(songs[index]);
+        }
+        //  }
+        /*
+        else {
             int index = (searchResult * -1) + 1;
             while (index + 1 < songs.length && songs[index + 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
                 ++index;
                 counter++;
                 matchingSongs.add(songs[index]);
             }
-	*/
         }
+
+         */
         // else? - J
         // Partial match is two's compliment: index = -(searchResult + 1) - J
         // index gets the position for two's compliment of searchResult and loops
         // forwards for matches - J
-
+        counter++;
         int compCount = ((CmpCnt) comp).getCmpCnt() + counter;
         int log = (int) (Math.log(songs.length) / Math.log(2));
         //rest of instrument outputs
@@ -145,7 +149,7 @@ public class SearchByArtistPrefix {
         SongCollection sc = new SongCollection(args[0]);
         SearchByArtistPrefix sbap = new SearchByArtistPrefix(sc);
 
-        if (args.length >= 0) {
+        if (args.length >= 1) {
             System.out.println("searching for: " + args[1]);
             Song[] byArtistResult = sbap.search(args[1]);
 
