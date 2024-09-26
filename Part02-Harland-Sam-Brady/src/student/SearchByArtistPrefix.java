@@ -102,13 +102,14 @@ public class SearchByArtistPrefix {
                 counter++;
                 matchingSongs.add(songs[index]);
             }
-        } else {
+        } /* else {
             int index = (searchResult * -1) + 1;
             while (index + 1 < songs.length && songs[index + 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
                 ++index;
                 counter++;
                 matchingSongs.add(songs[index]);
             }
+	*/
         }
         // else? - J
         // Partial match is two's compliment: index = -(searchResult + 1) - J
