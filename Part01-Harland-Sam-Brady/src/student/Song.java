@@ -3,30 +3,30 @@
  * **********************************************************************
  *                     Revision History (newest first)
  ************************************************************************
- * 09/12/2024 Harland Norcott - Implemented Song class, including
+ * 09/12/2024 Harland Norcott - Implemented Song class, including 
  * compareTo and toString
- * 8.2016 - Anne Applin - formatting and JavaDoc skeletons added
- * 2015 -   Prof. Bob Boothe - Starting code and main for testing
+ * 8.2016 - Anne Applin - formatting and JavaDoc skeletons added   
+ * 2015 -   Prof. Bob Boothe - Starting code and main for testing  
  ************************************************************************
  */
 package student;
+import java.util.*;
 
 /**
- * Song class to hold strings for a song's artist, title, and lyrics Do not add
- * any methods for part 1, just implement the ones that are here.
- *
+ * Song class to hold strings for a song's artist, title, and lyrics
+ * Do not add any methods for part 1, just implement the ones that are 
+ * here.
  * @author boothe
  */
 public class Song implements Comparable {
     // private fields
-
+    
     private String artist;
     private String lyrics;
     private String title;
 
     /**
      * Parameterized constructor
-     *
      * @param artist the author of the song
      * @param title the title of the song
      * @param lyrics the lyrics as a string with linefeeds embedded
@@ -62,40 +62,39 @@ public class Song implements Comparable {
     }
 
     /**
-     * returns name and title ONLY on one line in the form: artist, "title"
-     *
+     * returns name and title ONLY on one line in the form:
+     * artist, "title"
      * @return a formatted string with comma and quotes added
      */
     public String toString() {
         StringBuilder str = new StringBuilder();
-
-        str.append(String.format("%s, \"%s\",", this.artist, this.title));
-
+        
+        str.append(String.format("%s, \"%s\", \n%s", this.artist, this.title, this.lyrics));
+        
         return str.toString();
     }
 
     /**
-     * the default comparison of songs primary key: artist, secondary key: title
-     * used for sorting and searching the song array if two songs have the same
-     * artist and title they are considered the same
-     *
+     * the default comparison of songs
+     * primary key: artist, secondary key: title
+     * used for sorting and searching the song array
+     * if two songs have the same artist and title they are considered the same
      * @param song2
-     * @return a negative number, positive number or 0 depending on whether this
-     * song should be before, after or is the same. Used for a "natural" sorting
-     * order. In this case first by author then by title so that the all of an
-     * artist's songs are together, but in alpha order. Follow the given
-     * example.
+     * @return a negative number, positive number or 0 depending on whether 
+     *    this song should be  before, after or is the same.  Used for a
+     *    "natural" sorting order.  In this case first by author then by 
+     *    title so that the all of an artist's songs are together, 
+     *    but in alpha order.  Follow the given example.
      */
     @Override
     public int compareTo(Object that) {
         int compareVar = this.toString().compareToIgnoreCase(that.toString());
-
+        
         return compareVar;
     }
-
+    
     /**
      * testing method to unit test this class
-     *
      * @param args
      */
     public static void main(String[] args) {
