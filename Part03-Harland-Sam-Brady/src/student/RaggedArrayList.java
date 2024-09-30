@@ -195,9 +195,35 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * level 2 array
      */
     public ListLoc findFront(E item) {
-        // TO DO in part 3 
+         // Loop through the L1Array
+        for (int i = 0; i < l1NumUsed; i++) {
+            L2Array l2Array = (L2Array) l1Array[i];
+            
+            // Linear search within the L2 array
+            for (int j = 0; j < l2Array.numUsed; j++) {
+                E currentItem = l2Array.items[j];
+                int comparison = comp.compare(item, currentItem);
+                
+                if (comparison == 0) {
+                    // Found a match, return its location
+                    return new ListLoc(i, j);
+                } else if (comparison < 0) {
+                    // The item should be inserted before currentItem
+                    return new ListLoc(i, j);
+                }
+            }
+            
+            // Check if this L2Array has unused space where the item could be inserted
+            if (l2Array.numUsed < l2Array.items.length) {
+                return new ListLoc(i, l2Array.numUsed);
+            }
+        }
 
-        return null; // when finished should return: new ListLoc(l1,l2);
+        // If no match, the item belongs at the very end of the last used L2Array
+        L2Array lastL2Array = (L2Array) l1Array[l1NumUsed - 1];
+        return new ListLoc(l1NumUsed - 1, lastL2Array.numUsed);
+
+       
     }
 
     /**
