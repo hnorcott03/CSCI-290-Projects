@@ -1,10 +1,10 @@
-/**  
+/**
  * File: RaggedArrayList.java
  * ****************************************************************************
  *                           Revision History
  * ****************************************************************************
- * 
- * 8/2015 - Anne Applin - Added formatting and JavaDoc 
+ *
+ * 8/2015 - Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  * ****************************************************************************
  */
@@ -20,7 +20,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * * 
+ * *
  * The RaggedArrayList is a 2 level data structure that is an array of arrays.
  *
  * It keeps the items in sorted order according to the comparator. Duplicates
@@ -28,15 +28,15 @@ import java.util.Scanner;
  *
  * NOTE: normally fields, internal nested classes and non API methods should all
  * be private, however they have been made public so that the tester code can
- * set them 
+ * set them
+ *
  * @author Bob Booth
- * @param <E>  A generic data type so that this structure can be built with any
+ * @param <E> A generic data type so that this structure can be built with any
  * data type (object)
  */
 public class RaggedArrayList<E> implements Iterable<E> {
 
     // must be even so when split get two equal pieces
-
     private static final int MINIMUM_SIZE = 4;
     /**
      * The total number of elements in the entire RaggedArrayList
@@ -73,9 +73,8 @@ public class RaggedArrayList<E> implements Iterable<E> {
 
     /**
      * ***********************************************************
-     * nested class for 2nd level arrays 
-     * read and understand it.
-     * (DONE - do not change)
+     * nested class for 2nd level arrays read and understand it. (DONE - do not
+     * change)
      */
     public class L2Array {
 
@@ -100,12 +99,10 @@ public class RaggedArrayList<E> implements Iterable<E> {
         }
     }// end of nested class L2Array
 
-   
     // ***********************************************************
-    
     /**
-     * total size (number of entries) in the entire data structure 
-     * (DONE - do not change)
+     * total size (number of entries) in the entire data structure (DONE - do
+     * not change)
      *
      * @return total size of the data structure
      */
@@ -115,8 +112,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
 
     /**
      * null out all references so garbage collector can grab them but keep
-     * otherwise empty l1Array and 1st L2Array 
-     * (DONE - Do not change)
+     * otherwise empty l1Array and 1st L2Array (DONE - Do not change)
      */
     public void clear() {
         size = 0;
@@ -131,8 +127,8 @@ public class RaggedArrayList<E> implements Iterable<E> {
 
     /**
      * *********************************************************
-     * nested class for a list position used only internally 2 parts: 
-     * level 1 index and level 2 index
+     * nested class for a list position used only internally 2 parts: level 1
+     * index and level 2 index
      */
     public class ListLoc {
 
@@ -158,8 +154,8 @@ public class RaggedArrayList<E> implements Iterable<E> {
         }
 
         /**
-         * test if two ListLoc's are to the same location 
-         * (done -- do not change)
+         * test if two ListLoc's are to the same location (done -- do not
+         * change)
          *
          * @param otherObj the other listLoc
          * @return true if they are the same location and false otherwise
@@ -190,55 +186,50 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * find 1st matching entry
      *
      * @param item the thing we are searching for a place to put.
-     * @return ListLoc of 1st matching item or of 1st item greater than 
-     * the item if no match this might be an unused slot at the end of a 
-     * level 2 array
+     * @return ListLoc of 1st matching item or of 1st item greater than the item
+     * if no match this might be an unused slot at the end of a level 2 array
      */
     public ListLoc findFront(E item) {
-         // Loop through the L1Array
-        for (int i = 0; i < l1NumUsed; i++) {
-            L2Array l2Array = (L2Array) l1Array[i];
-            
-            // Linear search within the L2 array
-            for (int j = 0; j < l2Array.numUsed; j++) {
-                E currentItem = l2Array.items[j];
+        if (size == 0) {
+            //if list is empty, return (0, 0) 
+            return new ListLoc(0, 0);
+        }
+
+        for (int l1 = 0; l1 < l1NumUsed; l1++) {
+            L2Array l2Array = (L2Array) l1Array[l1];
+
+            for (int l2 = 0; l2 < l2Array.numUsed; l2++) {
+                E currentItem = l2Array.items[l2];
                 int comparison = comp.compare(item, currentItem);
-                
                 if (comparison == 0) {
-                    // Found a match, return its location
-                    return new ListLoc(i, j);
+                    //found item
+                    return new ListLoc(l1, l2);
                 } else if (comparison < 0) {
-                    // The item should be inserted before currentItem
-                    return new ListLoc(i, j);
+                    //item not found, but current item is greater, return the position
+                    return new ListLoc(l1, l2);
                 }
-            }
-            
-            // Check if this L2Array has unused space where the item could be inserted
-            if (l2Array.numUsed < l2Array.items.length) {
-                return new ListLoc(i, l2Array.numUsed);
             }
         }
 
-        // If no match, the item belongs at the very end of the last used L2Array
+        //if we reach here, item is greater than any item in the structure,
+        //we return the position after the last item in the last L2Array
         L2Array lastL2Array = (L2Array) l1Array[l1NumUsed - 1];
         return new ListLoc(l1NumUsed - 1, lastL2Array.numUsed);
-
-       
     }
 
     /**
-     * find location after the last matching entry or if no match, it finds
-     * the index of the next larger item this is the position to add a new 
-     * entry this might be an unused slot at the end of a level 2 array
+     * find location after the last matching entry or if no match, it finds the
+     * index of the next larger item this is the position to add a new entry
+     * this might be an unused slot at the end of a level 2 array
      *
      * @param item the thing we are searching for a place to put.
      * @return the location where this item should go
      */
     public ListLoc findEnd(E item) {
-         // Loop through the L1Array
+        // Loop through the L1Array
         for (int i = 0; i < l1NumUsed; i++) {
             L2Array l2Array = (L2Array) l1Array[i];
-            
+
             // Linear search within the L2 array
             for (int j = 0; j < l2Array.numUsed; j++) {
                 E currentItem = l2Array.items[j];
@@ -309,8 +300,8 @@ public class RaggedArrayList<E> implements Iterable<E> {
     }
 
     /**
-     * returns an iterator for this list this method just creates an instance
-     * of the inner Itr() class (DONE)
+     * returns an iterator for this list this method just creates an instance of
+     * the inner Itr() class (DONE)
      *
      * @return an iterator
      */
@@ -344,10 +335,10 @@ public class RaggedArrayList<E> implements Iterable<E> {
         }
 
         /**
-         * return item and move to next throws NoSuchElementException if 
-         * off end of list.  An exception is thrown here because calling 
-         * next() without calling hasNext() shows a certain level or stupidity
-         * on the part of the programmer, so it can blow up. They deserve it.
+         * return item and move to next throws NoSuchElementException if off end
+         * of list. An exception is thrown here because calling next() without
+         * calling hasNext() shows a certain level or stupidity on the part of
+         * the programmer, so it can blow up. They deserve it.
          */
         public E next() {
             // TO DO in part 5 and NOT BEFORE
