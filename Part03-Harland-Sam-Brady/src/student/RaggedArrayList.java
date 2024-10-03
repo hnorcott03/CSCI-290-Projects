@@ -234,7 +234,9 @@ public class RaggedArrayList<E> implements Iterable<E> {
             for (int j = 0; j < l2Array.numUsed; j++) {
                 E currentItem = l2Array.items[j];
                 int comparison = comp.compare(item, currentItem);
-
+                
+                // If the item's string code is less than that of the current
+                // item, return the current position
                 if (comparison < 0) {
                     return new ListLoc(i, j);
                 }
