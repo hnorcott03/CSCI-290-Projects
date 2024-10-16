@@ -257,6 +257,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public boolean add(E item) {
         // TO DO in part 4 and NOT BEFORE
+       ListLoc index = findEnd(item);
 
         return true;
     }
