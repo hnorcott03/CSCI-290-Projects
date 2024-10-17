@@ -3,7 +3,7 @@
  * ****************************************************************************
  *                           Revision History
  * ****************************************************************************
- *
+ * 10/16/2024 - Sam Gatchell - worked on add() method
  * 8/2015 - Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  * ****************************************************************************
@@ -257,9 +257,68 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public boolean add(E item) {
         // TO DO in part 4 and NOT BEFORE
-       ListLoc index = findEnd(item);
+        ListLoc index = findEnd(item);
+        L2Array tempL2 = ((L2Array) l1Array[index.level1Index]);
+        
+        //checks if the index is aready used
+        if (tempL2.items[index.level2Index] != null) {
+            int i = index.level2Index;
+        //makes space for item to be inserted
+            System.arraycopy(tempL2.items, i, tempL2.items, i + 1,
+                    tempL2.numUsed - i);
+        }
+        
+        //checks to see if the array will be full after adding
+        if (tempL2.numUsed + 1 == tempL2.items.length) {
+            if (l1NumUsed > tempL2.numUsed + 1) {
+                tempL2.items = Arrays.copyOf(tempL2.items, tempL2.items.length * 2);
+            } else {
 
+        //spilts l2Array
+                L2Array spiltL2 = new L2Array(tempL2.numUsed);
+                int midpointIndex = tempL2.items.length / 2;
+                tempL2.numUsed = midpointIndex;
+                spiltL2.numUsed = midpointIndex;
+
+                int l1Index = index.level1Index;
+                if (l1Array.length <= l1NumUsed + 1) {
+                     System.out.println();
+                    l1Array = Arrays.copyOf(l1Array, l1Array.length * 2);
+                   
+                }
+                
+                System.arraycopy(l1Array, l1Index, l1Array, l1Index + 1,
+                        l1NumUsed - l1Index);
+               
+        //copys the second half to the new array
+                System.arraycopy(tempL2.items, midpointIndex, spiltL2.items, 0, midpointIndex);
+
+
+                Arrays.fill(tempL2.items, midpointIndex, tempL2.items.length, null);
+        //was having issue with odd sized arrays should come up with a better solution - Sam
+                if(spiltL2.items.length/2 != 0){
+                    spiltL2.items = Arrays.copyOf(spiltL2.items, spiltL2.items.length+1);
+                }
+                
+        //adjusts position to match with the spilt
+                if (index.level2Index > midpointIndex - 1) {
+                    index.level2Index = index.level2Index - midpointIndex;
+                    System.out.println("aHH");
+                    tempL2 = spiltL2;
+                }
+              
+                //adjust numused to match
+                tempL2.numUsed--;
+                l1Array[l1Index + 1] = spiltL2;
+                l1NumUsed++;
+            }
+
+        }        
+        tempL2.items[index.level2Index] = item;
+        tempL2.numUsed++;
+        size++;
         return true;
+    
     }
 
     /**
