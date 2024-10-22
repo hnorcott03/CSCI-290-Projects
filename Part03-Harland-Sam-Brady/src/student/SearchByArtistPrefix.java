@@ -3,7 +3,7 @@
  *****************************************************************************
  *                       Revision History
  *****************************************************************************
- *
+ * 10/05/2024 - Sam Gatchell - updated search method
  * 8/2015 Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  *****************************************************************************
@@ -72,7 +72,7 @@ public class SearchByArtistPrefix {
         searchResult = Arrays.binarySearch(songs, key, comp);
         //outputs index of binary search
         System.out.println("index from BS: " + searchResult);
-        System.out.println("Binary search comparions:"
+        System.out.println("Binary search comparisons:"
                 + ((CmpCnt) comp).getCmpCnt());
 
         //finds front from negative binary search result
@@ -86,7 +86,7 @@ public class SearchByArtistPrefix {
         // If an exact match was found (searchResult is not negative) - J
         //if (searchResult > 0) {
         // Add the current song to matching songs - J
-        matchingSongs.add(songs[searchResult]);
+        //matchingSongs.add(songs[searchResult]); this was adding a song even if there are no results - Sam
         // index gets the position for searchResult and loops backwards for matches - J
         int index = searchResult;
         while (index > 0 && songs[index - 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
@@ -98,23 +98,14 @@ public class SearchByArtistPrefix {
         index = searchResult;
 
         while (index < songs.length && songs[index].getArtist().toLowerCase().startsWith(artistPrefix)) {
-            ++index;
-            counter++;
-            matchingSongs.add(songs[index]);
-        }
-        //  }
-        /*
-        else {
-            int index = (searchResult * -1) + 1;
-            while (index + 1 < songs.length && songs[index + 1].getArtist().toLowerCase().startsWith(artistPrefix)) {
-                ++index;
-                counter++;
+            if (!matchingSongs.contains(songs[index])) {
                 matchingSongs.add(songs[index]);
             }
+            ++index;
+            counter++;
         }
-
-         */
-        // else? - J
+        
+        
         // Partial match is two's compliment: index = -(searchResult + 1) - J
         // index gets the position for two's compliment of searchResult and loops
         // forwards for matches - J
@@ -126,7 +117,7 @@ public class SearchByArtistPrefix {
         System.out.println("Actual complexity is: " + compCount);
         System.out.println("k is " + matchingSongs.size());
         System.out.println("log_{2}(n) = " + log);
-        System.out.println("Theorectial complexity k + log(n): "
+        System.out.println("Theoretical complexity k + log{2}(n): "
                 + (matchingSongs.size() + log));
         System.out.println();
 
