@@ -281,10 +281,23 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * @return the filled in array
      */
     public E[] toArray(E[] a) {
-        // TO DO in part 5 and NOT BEFORE
-
-        return a;
+    // Ensure that the provided array has the correct size
+    if (a.length != size) {
+        throw new IllegalArgumentException("Array size does not match list size.");
     }
+
+    // Track the current index in the array
+    int index = 0;
+
+    // Iterate over each L2Array and copy its elements into the provided array
+    for (int i = 0; i < l1NumUsed; i++) {
+        L2Array l2Array = (L2Array) l1Array[i];
+        for (int j = 0; j < l2Array.numUsed; j++) {
+            a[index++] = l2Array.items[j];
+        }
+    }
+    return a;
+}
 
     /**
      * returns a new independent RaggedArrayList whose elements range from
@@ -296,11 +309,25 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * @return the sublist
      */
     public RaggedArrayList<E> subList(E fromElement, E toElement) {
-        // TO DO in part 5 and NOT BEFORE
+    RaggedArrayList<E> result = new RaggedArrayList<>(comp);
 
-        RaggedArrayList<E> result = new RaggedArrayList<E>(comp);
-        return result;
+    // Find the starting and ending locations using findFront()
+    ListLoc startLoc = findFront(fromElement);
+    ListLoc endLoc = findFront(toElement);
+
+    // Traverse from startLoc to endLoc and add elements to the result list
+    for (int i = startLoc.level1Index; i <= endLoc.level1Index; i++) {
+        L2Array l2Array = (L2Array) l1Array[i];
+        int startJ = (i == startLoc.level1Index) ? startLoc.level2Index : 0;
+        int endJ = (i == endLoc.level1Index) ? endLoc.level2Index : l2Array.numUsed;
+
+        for (int j = startJ; j < endJ; j++) {
+            result.add(l2Array.items[j]);
+        }
     }
+
+    return result;
+}
 
     /**
      * returns an iterator for this list this method just creates an instance of
