@@ -329,7 +329,10 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public boolean contains(E item) {
         // TO DO in part 5 and NOT BEFORE
-
+        if(findFront(item) != null && findFront(item).toString() != " ") {
+            return true;
+        }
+        
         return false;
     }
 
