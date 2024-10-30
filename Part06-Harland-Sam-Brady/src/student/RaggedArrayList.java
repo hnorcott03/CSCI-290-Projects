@@ -344,22 +344,22 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public E[] toArray(E[] a) {
     // Ensure that the provided array has the correct size
-    if (a.length != size) {
-        throw new IllegalArgumentException("Array size does not match list size.");
-    }
-
-    // Track the current index in the array
-    int index = 0;
-
-    // Iterate over each L2Array and copy its elements into the provided array
-    for (int i = 0; i < l1NumUsed; i++) {
-        L2Array l2Array = (L2Array) l1Array[i];
-        for (int j = 0; j < l2Array.numUsed; j++) {
-            a[index++] = l2Array.items[j];
+        if (a.length != size) {
+            throw new IllegalArgumentException("Array size does not match list size.");
         }
+
+        // Track the current index in the array
+        int index = 0;
+
+        // Iterate over each L2Array and copy its elements into the provided array
+        for (int i = 0; i < l1NumUsed; i++) {
+            L2Array l2Array = (L2Array) l1Array[i];
+            for (int j = 0; j < l2Array.numUsed; j++) {
+                a[index++] = l2Array.items[j];
+            }
+        }
+        return a;
     }
-    return a;
-}
 
     /**
      * returns a new independent RaggedArrayList whose elements range from
