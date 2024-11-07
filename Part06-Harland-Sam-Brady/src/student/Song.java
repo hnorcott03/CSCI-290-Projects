@@ -113,8 +113,8 @@ public class Song implements Comparable {
     }
 
     /**
-     * Nested static comparator class for comparing songs by title.
-     * This compares two Song objects based on their title fields, ignoring case.
+     * Nested static comparator class for comparing songs by title. This
+     * compares two Song objects based on their title fields, ignoring case.
      */
     public static class CmpTitle implements Comparator<Song> {
 
