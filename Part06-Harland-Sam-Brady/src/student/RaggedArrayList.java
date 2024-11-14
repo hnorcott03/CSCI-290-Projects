@@ -3,6 +3,7 @@
  * ****************************************************************************
  *                           Revision History
  * ****************************************************************************
+ * 11/14/20204 Sam Gatchell - added stats method
  * 10/16/2024 - Sam Gatchell - worked on add() method
  * 8/2015 - Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
@@ -178,7 +179,13 @@ public class RaggedArrayList<E> implements Iterable<E> {
          * used to implement the iterator.
          */
         public void moveToNext() {
-            // TO DO IN PART 5 and NOT BEFORE
+             // TO DO IN PART 5 and NOT BEFORE
+            if (level2Index < ((L2Array) l1Array[level1Index]).numUsed-1) {
+                level2Index++;
+            } else {
+                level2Index = 0;
+                level1Index++;
+            }
         }
     }
 
@@ -420,7 +427,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
         public boolean hasNext() {
             // TO DO in part 5 and NOT BEFORE
 
-            return false;
+            return !loc.equals(new ListLoc(l1NumUsed, 0));
         }
 
         /**
@@ -432,7 +439,17 @@ public class RaggedArrayList<E> implements Iterable<E> {
         public E next() {
             // TO DO in part 5 and NOT BEFORE
 
-            throw new IndexOutOfBoundsException();
+            Object E = null;
+
+            try {
+                E = ((L2Array) l1Array[loc.level1Index]).items[loc.level2Index];
+                loc.moveToNext();
+
+            } catch (IndexOutOfBoundsException ob) {
+                System.err.print("Out of bounds");
+            }
+
+            return (E) E;
         }
 
         /**
@@ -441,5 +458,37 @@ public class RaggedArrayList<E> implements Iterable<E> {
         public void remove() {
             throw new UnsupportedOperationException();
         }
+    }
+    /**
+     * Written by Bob Booth as part of the testing harness for 
+     * Project Part 5, this stats method allows any RaggedArrayList
+     * object to print its own statistics.  You must remember to 
+     * reset the Comparator object's count field before creating 
+     * a ragged array list.
+     * Modified to be a RAL method by Anne Applin
+     */
+    public  void stats() {
+        System.out.println("STATS:");
+        int size = this.size();
+        System.out.println("list size N = " + size);
+
+        // level 1 array
+        int l1NumUsed = this.l1NumUsed;
+        System.out.println("level 1 array " + l1NumUsed + " of "
+                + this.l1Array.length + " used.");
+
+        // level 2 arrays
+        int minL2size = Integer.MAX_VALUE, maxL2size = 0;
+        for (int i1 = 0; i1 < this.l1NumUsed; i1++) {
+            RaggedArrayList<Song>.L2Array l2array
+                    = (RaggedArrayList<Song>.L2Array)
+                    (this.l1Array[i1]);
+            minL2size = Math.min(minL2size, l2array.numUsed);
+            maxL2size = Math.max(maxL2size, l2array.numUsed);
+        }
+        System.out.printf("level 2 array sizes: min = %d used, avg = %.1f "
+                + "used, max = %d used.%n%n",
+                minL2size, 
+                (double) size / l1NumUsed, maxL2size);
     }
 }

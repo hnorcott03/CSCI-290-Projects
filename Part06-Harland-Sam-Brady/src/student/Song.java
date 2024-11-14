@@ -3,7 +3,8 @@
  * **********************************************************************
  *                     Revision History (newest first)
  ************************************************************************
- * 10/28/2023 Brady Roy - added CmpTitle
+ * 11/14/20204 Sam Gatchell - updated CmpArtist
+ * 10/28/2024 Brady Roy - added CmpTitle
  * 09/26/2024 Sam Gatchell - added javadoc
  * 09/25/2024 Sam Gatchell - updated CmpArtist class
  * 09/23/2024 Brady Roy - Created a nested comparator class
@@ -116,10 +117,11 @@ public class Song implements Comparable {
      * Nested static comparator class for comparing songs by title. This
      * compares two Song objects based on their title fields, ignoring case.
      */
-    public static class CmpTitle implements Comparator<Song> {
-
+    public static class CmpTitle extends CmpCnt implements Comparator<Song> {
+    
         @Override
         public int compare(Song s1, Song s2) {
+                cmpCnt++;
             return s1.getTitle().compareToIgnoreCase(s2.getTitle());
         }
     }

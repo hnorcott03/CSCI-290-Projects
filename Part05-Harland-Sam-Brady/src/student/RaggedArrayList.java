@@ -289,7 +289,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
              //spilts l2Array
              L2Array spiltL2 = new L2Array(tempL2.items.length);
              int midpointIndex = tempL2.items.length / 2;
-             System.out.println("midpoint index: " + midpointIndex);
+            // System.out.println("midpoint index: " + midpointIndex);
              tempL2.numUsed = midpointIndex;
              spiltL2.numUsed = midpointIndex;
 
