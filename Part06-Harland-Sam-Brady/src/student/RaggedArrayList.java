@@ -179,12 +179,6 @@ public class RaggedArrayList<E> implements Iterable<E> {
          */
         public void moveToNext() {
             // TO DO IN PART 5 and NOT BEFORE
-            if (level2Index < ((L2Array) l1Array[level1Index]).numUsed-1) {
-                level2Index++;
-            } else {
-                level2Index = 0;
-                level1Index++;
-            }
         }
     }
 
@@ -240,7 +234,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
             for (int j = 0; j < l2Array.numUsed; j++) {
                 E currentItem = l2Array.items[j];
                 int comparison = comp.compare(item, currentItem);
-                
+
                 // If the item's string code is less than that of the current
                 // item, return the current position
                 if (comparison < 0) {
@@ -263,77 +257,65 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public boolean add(E item) {
         // TO DO in part 4 and NOT BEFORE
-     ListLoc locLindex = findEnd(item);
-     L2Array tempL2 = ((L2Array) l1Array[locLindex.level1Index]);
+        ListLoc index = findEnd(item);
+        L2Array tempL2 = ((L2Array) l1Array[index.level1Index]);
 
-   
-     /* System.out.println("orignal l2 Array");
-     for (int i = 0; i < tempL2.items.length; i++) {
-         System.out.println(tempL2.items[i]);
-     } */
-  
-     //checks if the locLindex is aready used
-     if (tempL2.items[locLindex.level2Index] != null) {
-         int index = locLindex.level2Index;
-         //makes space for item to be inserted
-         System.arraycopy(tempL2.items, index, tempL2.items, index + 1,
-                 tempL2.numUsed - index);
-     }
-     //checks to see if the array will be full after adding
-     if (tempL2.numUsed + 1 == tempL2.items.length) {
-         if (l1NumUsed > tempL2.numUsed + 1) {
-             tempL2.items = Arrays.copyOf(tempL2.items, tempL2.items.length * 2);
-         } else {
+        //checks if the index is aready used
+        if (tempL2.items[index.level2Index] != null) {
+            int i = index.level2Index;
+            //makes space for item to be inserted
+            System.arraycopy(tempL2.items, i, tempL2.items, i + 1,
+                    tempL2.numUsed - i);
+        }
 
-             //spilts l2Array
-             L2Array spiltL2 = new L2Array(tempL2.items.length);
-             int midpointIndex = tempL2.items.length / 2;
-             System.out.println("midpoint index: " + midpointIndex);
-             tempL2.numUsed = midpointIndex;
-             spiltL2.numUsed = midpointIndex;
+        //checks to see if the array will be full after adding
+        if (tempL2.numUsed + 1 == tempL2.items.length) {
+            if (l1NumUsed > tempL2.numUsed + 1) {
+                tempL2.items = Arrays.copyOf(tempL2.items, tempL2.items.length * 2);
+            } else {
 
-             int l1Index = locLindex.level1Index;
-             if (l1Array.length <= l1NumUsed + 1) {
+                //spilts l2Array
+                L2Array spiltL2 = new L2Array(tempL2.numUsed);
+                int midpointIndex = tempL2.items.length / 2;
+                tempL2.numUsed = midpointIndex;
+                spiltL2.numUsed = midpointIndex;
 
-                 l1Array = Arrays.copyOf(l1Array, l1Array.length * 2);
+                int l1Index = index.level1Index;
+                if (l1Array.length <= l1NumUsed + 1) {
+                    l1Array = Arrays.copyOf(l1Array, l1Array.length * 2);
 
-             }
+                }
 
-             System.arraycopy(l1Array, l1Index, l1Array, l1Index + 1,
-                     l1NumUsed - l1Index);
+                System.arraycopy(l1Array, l1Index, l1Array, l1Index + 1,
+                        l1NumUsed - l1Index);
 
-             //copys the second half to the new array
-             System.arraycopy(tempL2.items, midpointIndex, spiltL2.items, 0, midpointIndex);
+                //copys the second half to the new array
+                System.arraycopy(tempL2.items, midpointIndex, spiltL2.items, 0, midpointIndex);
 
-             Arrays.fill(tempL2.items, midpointIndex, tempL2.items.length, null);
-             /*
-             //testing loop
-             System.out.println("tempL2");
-             for (int i = 0; i < tempL2.items.length; i++) {
-                 System.out.println(tempL2.items[i]);
-             }
-             System.out.println("spiltL2");
-             for (int i = 0; i < spiltL2.items.length; i++) {
-                 System.out.println(spiltL2.items[i]);
-             }
-             */
+                Arrays.fill(tempL2.items, midpointIndex, tempL2.items.length, null);
+                //was having issue with odd sized arrays should come up with a better solution - Sam
+                if (spiltL2.items.length / 2 != 0) {
+                    spiltL2.items = Arrays.copyOf(spiltL2.items, spiltL2.items.length + 1);
+                }
 
-             //adjusts position to match with the spilt
-             if (locLindex.level2Index > midpointIndex - 1) {
-                 locLindex.level2Index = locLindex.level2Index - midpointIndex;
-                 tempL2 = spiltL2;
-             }
+                //adjusts position to match with the spilt
+                if (index.level2Index > midpointIndex - 1) {
+                    index.level2Index = index.level2Index - midpointIndex;
+                    tempL2 = spiltL2;
+                }
 
-             //adjust numused to match
-             tempL2.numUsed--;
-             l1Array[l1Index + 1] = spiltL2;
-             l1NumUsed++;
-         }
-     }
-     tempL2.items[locLindex.level2Index] = item;
-     tempL2.numUsed++;
-     size++;
-     return true;
+                //adjust numused to match
+                tempL2.numUsed--;
+                l1Array[l1Index + 1] = spiltL2;
+                l1NumUsed++;
+            }
+
+        }
+        tempL2.items[index.level2Index] = item;
+        tempL2.numUsed++;
+        size++;
+        return true;
+
     }
 
     /**
@@ -344,10 +326,10 @@ public class RaggedArrayList<E> implements Iterable<E> {
      */
     public boolean contains(E item) {
         // TO DO in part 5 and NOT BEFORE
-        if(findFront(item) != null && findFront(item).toString() != " ") {
+        if (findFront(item) != null && findFront(item).toString() != " ") {
             return true;
         }
-        
+
         return false;
     }
 
@@ -358,23 +340,23 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * @return the filled in array
      */
     public E[] toArray(E[] a) {
-    // Ensure that the provided array has the correct size
-    if (a.length != size) {
-        throw new IllegalArgumentException("Array size does not match list size.");
-    }
-
-    // Track the current index in the array
-    int index = 0;
-
-    // Iterate over each L2Array and copy its elements into the provided array
-    for (int i = 0; i < l1NumUsed; i++) {
-        L2Array l2Array = (L2Array) l1Array[i];
-        for (int j = 0; j < l2Array.numUsed; j++) {
-            a[index++] = l2Array.items[j];
+        // Ensure that the provided array has the correct size
+        if (a.length != size) {
+            throw new IllegalArgumentException("Array size does not match list size.");
         }
+
+        // Track the current index in the array
+        int index = 0;
+
+        // Iterate over each L2Array and copy its elements into the provided array
+        for (int i = 0; i < l1NumUsed; i++) {
+            L2Array l2Array = (L2Array) l1Array[i];
+            for (int j = 0; j < l2Array.numUsed; j++) {
+                a[index++] = l2Array.items[j];
+            }
+        }
+        return a;
     }
-    return a;
-}
 
     /**
      * returns a new independent RaggedArrayList whose elements range from
@@ -386,25 +368,25 @@ public class RaggedArrayList<E> implements Iterable<E> {
      * @return the sublist
      */
     public RaggedArrayList<E> subList(E fromElement, E toElement) {
-    RaggedArrayList<E> result = new RaggedArrayList<>(comp);
+        RaggedArrayList<E> result = new RaggedArrayList<>(comp);
 
-    // Find the starting and ending locations using findFront()
-    ListLoc startLoc = findFront(fromElement);
-    ListLoc endLoc = findFront(toElement);
+        // Find the starting and ending locations using findFront()
+        ListLoc startLoc = findFront(fromElement);
+        ListLoc endLoc = findFront(toElement);
 
-    // Traverse from startLoc to endLoc and add elements to the result list
-    for (int i = startLoc.level1Index; i <= endLoc.level1Index; i++) {
-        L2Array l2Array = (L2Array) l1Array[i];
-        int startJ = (i == startLoc.level1Index) ? startLoc.level2Index : 0;
-        int endJ = (i == endLoc.level1Index) ? endLoc.level2Index : l2Array.numUsed;
+        // Traverse from startLoc to endLoc and add elements to the result list
+        for (int i = startLoc.level1Index; i <= endLoc.level1Index; i++) {
+            L2Array l2Array = (L2Array) l1Array[i];
+            int startJ = (i == startLoc.level1Index) ? startLoc.level2Index : 0;
+            int endJ = (i == endLoc.level1Index) ? endLoc.level2Index : l2Array.numUsed;
 
-        for (int j = startJ; j < endJ; j++) {
-            result.add(l2Array.items[j]);
+            for (int j = startJ; j < endJ; j++) {
+                result.add(l2Array.items[j]);
+            }
         }
-    }
 
-    return result;
-}
+        return result;
+    }
 
     /**
      * returns an iterator for this list this method just creates an instance of
@@ -438,7 +420,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
         public boolean hasNext() {
             // TO DO in part 5 and NOT BEFORE
 
-            return !loc.equals(new ListLoc(l1NumUsed, 0));
+            return false;
         }
 
         /**
@@ -450,19 +432,7 @@ public class RaggedArrayList<E> implements Iterable<E> {
         public E next() {
             // TO DO in part 5 and NOT BEFORE
 
-           // throw new IndexOutOfBoundsException();
-           Object E = null;
-
-            try {
-                E = ((L2Array) l1Array[loc.level1Index]).items[loc.level2Index];
-                loc.moveToNext();
-
-            } catch (IndexOutOfBoundsException ob) {
-                System.err.print("Out of bounds");
-            }
-
-            return (E) E;
-
+            throw new IndexOutOfBoundsException();
         }
 
         /**
