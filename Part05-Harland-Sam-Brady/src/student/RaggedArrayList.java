@@ -4,6 +4,7 @@
  *                           Revision History
  * ****************************************************************************
  * 10/16/2024 - Sam Gatchell - worked on add() method
+ * 10/16/2024 - Brady Roy - Worked on toArray and subList methods
  * 8/2015 - Anne Applin - Added formatting and JavaDoc
  * 2015 - Bob Boothe - starting code
  * ****************************************************************************
