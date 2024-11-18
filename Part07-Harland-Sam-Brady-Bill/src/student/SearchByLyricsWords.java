@@ -28,7 +28,7 @@ public class SearchByLyricsWords {
         catch(Exception e){
             System.err.println("usage: prog wordFile");
         }
-      printSet();
+      
     }
     //method for testing, prints all elements in treeset
     public void printSet(){
@@ -45,6 +45,7 @@ public class SearchByLyricsWords {
         
         SongCollection sc = new SongCollection(args[0]);
         SearchByLyricsWords sbl = new SearchByLyricsWords(sc);
+        sbl.printSet();
         }
         else{
                 System.err.println("usage: prog songfile");
