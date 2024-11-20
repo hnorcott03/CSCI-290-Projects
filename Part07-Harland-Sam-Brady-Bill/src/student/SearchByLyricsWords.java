@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package student;
-
 import java.io.FileReader;
 import java.util.Scanner;
 import java.util.Set;
@@ -70,5 +69,4 @@ public class SearchByLyricsWords {
         }
 
     }
-
 }
