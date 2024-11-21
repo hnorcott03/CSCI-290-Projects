@@ -23,7 +23,7 @@ public class SearchByLyricsWords {
         try {
             Scanner fileScnr = new Scanner(new FileReader(fileName));
             while (fileScnr.hasNext()) {
-                comWords.add(fileScnr.next());
+                comWords.add(fileScnr.next().toLowerCase());
             }
         } catch (Exception e) {
             System.err.println("usage: prog wordFile");
@@ -65,8 +65,8 @@ public class SearchByLyricsWords {
             
         } else {
             System.err.println("usage: prog songfile");
-            
         }
-
     }
 }
+
+
