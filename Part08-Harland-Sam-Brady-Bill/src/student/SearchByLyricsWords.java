@@ -17,7 +17,7 @@ import java.util.TreeSet;
 public class SearchByLyricsWords {
 
     private Set<String> comWords;
-    private TreeMap<String, TreeSet<Song>> lyricsMap;//make it a class member.
+    private TreeMap<String, TreeSet<Song>> lyricsMap;
 
     public SearchByLyricsWords(SongCollection songCol) {
         String fileName = "../commonWords.txt";
@@ -43,7 +43,6 @@ public class SearchByLyricsWords {
                     tempSet = new TreeSet<>();
                     tempSet.add(currSong);
                     lyricsMap.put(currWord, tempSet);
-                    //  System.out.println(currWord + ", " + lyricsMap.get(currWord));
                 } else if (lyricsMap.containsKey(currWord)) {
                     lyricsMap.get(currWord).add(currSong);
                 }
@@ -54,9 +53,9 @@ public class SearchByLyricsWords {
 
     public Song[] search(String lyricsWords) {
         String[] wordArr = lyricsWords.toLowerCase().replaceAll("[^a-z ]", " ").split("\\s+");
-        TreeSet<Song> searchSet = new TreeSet();
-        TreeSet<Song> tempSet = new TreeSet();
-        TreeMap<String, TreeSet<Song>> searchMap = new TreeMap();
+        TreeSet<Song> searchSet = new TreeSet<>();
+        TreeSet<Song> tempSet;
+        TreeMap<String, TreeSet<Song>> searchMap = new TreeMap<>();
         for (String currWord : wordArr) {
             if (currWord.length() > 1 && !comWords.contains(currWord)) {
                 tempSet = new TreeSet<>();
@@ -65,33 +64,23 @@ public class SearchByLyricsWords {
                 } else {
                     tempSet = new TreeSet<>();
                     searchMap.put(currWord, tempSet);
-
                 }
             }
         }
         searchSet = searchMap.get(searchMap.firstKey());
-        for (String currWord : searchMap.sequencedKeySet()) {
+        for (String currWord : searchMap.keySet()) {
             searchSet.retainAll(searchMap.get(currWord));
         }
-        //  System.out.println(searchSet);
 
-        Song[] matches = new Song[searchSet.toArray().length];
+        Song[] matches = searchSet.toArray(new Song[0]);
 
-        System.arraycopy(searchSet.toArray(), 0, matches, 0, searchSet.toArray().length);
-
-        for (Song currSong : matches) {
-            System.out.println(currSong);
-        }
-
-        return null;
+        return matches;
     }
 
-    //Statistics method
     public void Statistics() {
-        //1.number of keys in the map
         int numKeys = lyricsMap.size();
         System.out.println("Number of keys in the map: " + numKeys);
-        //iterate thru map
+
         int totalSongRef = 0;
         for (TreeSet<Song> songs : lyricsMap.values()) {
             totalSongRef += songs.size();
@@ -108,11 +97,8 @@ public class SearchByLyricsWords {
         System.out.println("Total space used by the compound data structure: " + totalSpaceUsed + " bytes");
 
         System.out.println("Space usage as a function of N is O(N)");
-
     }
 
-    //test method
-    //method for testing, prints all elements in treeset
     public void printSet() {
         for (Object com : comWords.toArray()) {
             System.out.println((String) com);
@@ -121,14 +107,27 @@ public class SearchByLyricsWords {
     }
 
     public static void main(String[] args) {
-        if (args.length > 0) {
-            SongCollection sc = new SongCollection(args[0]);
+        if (args.length >= 2) {
+            // First argument: name of the song file
+            String songFile = args[0];
+            // Second argument: string of lyric words to search
+            String lyricWords = args[1];
+
+            // Load the song collection and initialize the search object
+            SongCollection sc = new SongCollection(songFile);
             SearchByLyricsWords sbl = new SearchByLyricsWords(sc);
-            sbl.search("We don’t need no education");
-            // sbl.printSet();
-            //  sbl.Statistics();
+
+            // Perform the search
+            Song[] matches = sbl.search(lyricWords);
+
+            // Print the results
+            System.out.println("Total matches found: " + matches.length);
+            System.out.println("First 10 matches:");
+            for (int i = 0; i < Math.min(10, matches.length); i++) {
+                System.out.println("Artist: " + matches[i].getArtist() + ", Title: " + matches[i].getTitle());
+            }
         } else {
-            System.err.println("usage: prog songfile");
+            System.err.println("usage: prog songfile \"lyric words\"");
         }
     }
 }
