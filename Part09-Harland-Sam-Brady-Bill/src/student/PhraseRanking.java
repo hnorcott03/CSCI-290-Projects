@@ -18,6 +18,7 @@ public class PhraseRanking {
         Pattern phrasePattern = Pattern.compile("[a-zA-z_0-9]+", Pattern.CASE_INSENSITIVE);
         Matcher phraseMatcher = phrasePattern.matcher(lyricsPhrase);
         List<String> phraseWords = new ArrayList<>();
+        StringBuilder bestSubstring = new StringBuilder();
 
         while (phraseMatcher.find()) {
             phraseWords.add(phraseMatcher.group());
@@ -27,96 +28,64 @@ public class PhraseRanking {
         for (String word : phraseWords) {
             Pattern wordPattern = Pattern.compile("\\b" + word + "\\b", Pattern.CASE_INSENSITIVE);
             Matcher wordMatcher = wordPattern.matcher(lyrics);
-            List<Integer> wordIndices = new ArrayList<>();
+            List<Integer> wordIndexes = new ArrayList<>();
 
             while (wordMatcher.find()) {
-                if(word.equals(phraseWords.get(phraseWords.size() - 1))) {
-                    wordIndices.add(wordMatcher.end());
+                if (word.equals(phraseWords.get(phraseWords.size() - 1))) {
+                    wordIndexes.add(wordMatcher.end() - 1);
                 } else {
-                    wordIndices.add(wordMatcher.start());
+                    wordIndexes.add(wordMatcher.start());
                 }
             }
-            matchers.add(wordIndices);
+            matchers.add(wordIndexes);
         }
-        
-        Integer smallestCurrentDistance = Integer.MAX_VALUE;
-        Integer bestFirst = -1;
-        Integer bestLast = -1;
-        
+
+        int smallestCurrentDistance = Integer.MAX_VALUE;
+        int bestFirst = -1;
+        int bestLast = -1;
+
         for (Integer indexOfFirst : matchers.get(0)) {
             for (Integer indexOfLast : matchers.get(matchers.size() - 1)) {
-                if(indexOfLast > indexOfFirst && (indexOfLast - indexOfFirst < smallestCurrentDistance)) {
-                    int leftIndex = indexOfLast;
-                    int rightIndex = indexOfFirst;
+                if (indexOfLast > indexOfFirst) {
+                    int leftReference = indexOfFirst;
+                    int rightReference = indexOfLast;
                     boolean betweenMatch = true;
-                    
-                    
-                    
+
+                    for (int i = 0; i < matchers.size() - 1; i++) {
+                        List<Integer> currentList = matchers.get(i);
+                        boolean matchFound = false;
+                        for (Integer currIndex : currentList) {
+                            if (currIndex > leftReference && currIndex < rightReference) {
+                                leftReference = currIndex;
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                        if (!matchFound) {
+                            betweenMatch = false;
+                            break;
+                        }
+
+                    }
+
+                    if (betweenMatch) {
+                        int matchDistance = indexOfLast - indexOfFirst + 1;
+                        if (matchDistance < smallestCurrentDistance && matchDistance > 0) {
+                            smallestCurrentDistance = matchDistance;
+                            bestFirst = leftReference;
+                            bestLast = rightReference;
+                        }
+                    }
+
                 }
             }
         }
-
-
-
-//        lyrics = lyrics.toLowerCase().replaceAll("[^a-z ]", " ");
-//        lyricsPhrase = lyricsPhrase.toLowerCase().replaceAll("[^a-z ]", " ");
-//        String[] searchWords = lyricsPhrase.split("\\s+");
-//        String[] lyricsWords = lyrics.split("\\s+");
-//        
-//        int rank = 0;
-//        
-//        // Iterate through lyrics array until a word matches the first
-//        // the first word of the search phrase.
-//        
-//        int[] firstWordMatchLocs = new int[30];
-//        int j = 0;
-//        
-//        for(int i = 0; i < lyricsWords.length; i++) {
-//            if(lyricsWords[i].equals(searchWords[0])) {
-//                firstWordMatchLocs[j] = i;
-//                j++;
-//            }
-//        }
-//        
-//        StringBuilder fullLyricPhrase = new StringBuilder();
-//        
-//        for(int k = 0; k < firstWordMatchLocs.length; k++) {
-//            int l = firstWordMatchLocs[k];
-//            while(!lyricsWords[l].equals(searchWords[searchWords.length - 1])) {
-//                fullLyricPhrase.append(" ").append(lyricsWords[l]);
-//                l++;
-//            }
-//            
-//        }
-//        
-//        rank = fullLyricPhrase.toString().trim().length();
-//        for(int i = 0; i < lyricsWords.length; i++) {
-//            if(lyricsWords[i].equals(searchWords[0])) {
-//                fullLyricPhrase.append(lyricsWords[i]);
-//                int j = 1;
-//                int k = i + 1;
-//                while(j < searchWords.length && k < lyricsWords.length) {
-//                    
-//                    fullLyricPhrase.append(" ").append(lyricsWords[k]);
-//                    if(lyricsWords[k].equals(searchWords[j])) {
-//                        j++;
-//                    }
-//                    
-//                    String[] possMatchArr = fullLyricPhrase.toString().split("\\s+");
-//                    if(j == searchWords.length && possMatchArr[possMatchArr.length - 1].equals(searchWords[searchWords.length - 1]))  {
-//                        rank = fullLyricPhrase.toString().trim().length();
-//                    }
-//                    
-//                    k++;
-//                }
-//            }
-//        }
-        //System.out.println(lyrics + ", " + lyricsPhrase);
-//        if (rank == 0) {
-//            return -1;
-//        } else {
-//            return rank;
-//        }
+        if (smallestCurrentDistance > 0 && bestFirst > -1 && bestLast > -1) {
+            String matchSubstring = lyrics.substring(bestFirst, bestLast + 1).replace("\n", "nn");
+            System.out.println(matchSubstring);
+            bestSubstring.append(matchSubstring);
+            return bestSubstring.length();
+        } 
         return 0;
     }
 
@@ -125,7 +94,7 @@ public class PhraseRanking {
         int songCount = 0;
         for (Song currSong : sc.getAllSongs()) {
             int currSongRank = rankPhrase(currSong.getLyrics(), args[1]);
-            if (currSongRank > -1) {
+            if (currSongRank > 0) {
                 System.out.println(currSongRank + ", " + currSong.toString());
                 songCount++;
             }
