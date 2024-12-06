@@ -30,10 +30,33 @@ public class PhraseRanking {
             List<Integer> wordIndices = new ArrayList<>();
 
             while (wordMatcher.find()) {
-                wordIndices.add(wordMatcher.start()); // Store start index
+                if(word.equals(phraseWords.get(phraseWords.size() - 1))) {
+                    wordIndices.add(wordMatcher.end());
+                } else {
+                    wordIndices.add(wordMatcher.start());
+                }
             }
             matchers.add(wordIndices);
         }
+        
+        Integer smallestCurrentDistance = Integer.MAX_VALUE;
+        Integer bestFirst = -1;
+        Integer bestLast = -1;
+        
+        for (Integer indexOfFirst : matchers.get(0)) {
+            for (Integer indexOfLast : matchers.get(matchers.size() - 1)) {
+                if(indexOfLast > indexOfFirst && (indexOfLast - indexOfFirst < smallestCurrentDistance)) {
+                    int leftIndex = indexOfLast;
+                    int rightIndex = indexOfFirst;
+                    boolean betweenMatch = true;
+                    
+                    
+                    
+                }
+            }
+        }
+
+
 
 //        lyrics = lyrics.toLowerCase().replaceAll("[^a-z ]", " ");
 //        lyricsPhrase = lyricsPhrase.toLowerCase().replaceAll("[^a-z ]", " ");
