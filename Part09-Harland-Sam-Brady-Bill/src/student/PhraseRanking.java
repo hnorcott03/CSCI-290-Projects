@@ -12,6 +12,8 @@ import java.util.regex.*;
  * @author harlandnorcott
  */
 public class PhraseRanking {
+    
+    public static Song currSong;
 
     static int rankPhrase(String lyrics, String lyricsPhrase) {
 
@@ -44,19 +46,19 @@ public class PhraseRanking {
         int bestFirst = -1;
         int bestLast = -1;
 
-        for (Integer indexOfFirst : matchers.get(0)) {
+          for (Integer indexOfFirst : matchers.get(0)) {
             for (Integer indexOfLast : matchers.get(matchers.size() - 1)) {
                 if (indexOfLast > indexOfFirst) {
-                    int leftReference = indexOfFirst;
-                    int rightReference = indexOfLast;
+                    int leftReference = indexOfFirst.intValue();
+                    int rightReference = indexOfLast.intValue();
                     boolean betweenMatch = true;
 
                     for (int i = 0; i < matchers.size() - 1; i++) {
                         List<Integer> currentList = matchers.get(i);
                         boolean matchFound = false;
                         for (Integer currIndex : currentList) {
-                            if (currIndex > leftReference && currIndex < rightReference) {
-                                leftReference = currIndex;
+                            if (currIndex.intValue() > leftReference && currIndex.intValue() < rightReference) {
+                                leftReference = currIndex.intValue();
                                 matchFound = true;
                                 break;
                             }
@@ -70,17 +72,17 @@ public class PhraseRanking {
 
                     if (betweenMatch) {
                         int matchDistance = indexOfLast - indexOfFirst;
-                        if (matchDistance < smallestCurrentDistance && matchDistance > 0) {
+                        if (matchDistance < smallestCurrentDistance && matchDistance > lyricsPhrase.length()) {
                             smallestCurrentDistance = matchDistance;
-                            bestFirst = indexOfFirst - matchers.get(0).size();
-                            bestLast = indexOfLast;
+                            bestFirst = leftReference - phraseWords.get(0).length() - 1;
+                            bestLast = indexOfLast + 1;
                         }
                     }
 
                 }
             }
         }
-        if (smallestCurrentDistance > 0 && bestFirst > -1 && bestLast > -1) {
+        if (smallestCurrentDistance > 0 && bestFirst != -1 && bestLast != -1) {
             String matchSubstring = lyrics.substring(bestFirst, bestLast).replace("\n", "nn");
             System.out.println(matchSubstring);
             bestSubstring.append(matchSubstring);
@@ -92,10 +94,11 @@ public class PhraseRanking {
     public static void main(String args[]) {
         SongCollection sc = new SongCollection(args[0]);
         int songCount = 0;
-        for (Song currSong : sc.getAllSongs()) {
-            int currSongRank = rankPhrase(currSong.getLyrics(), args[1]);
+        for (Song currentSong : sc.getAllSongs()) {
+            currSong = currentSong;
+            int currSongRank = rankPhrase(currentSong.getLyrics(), args[1]);
             if (currSongRank > 0) {
-                System.out.println(currSongRank + ", " + currSong.toString());
+                System.out.println(currSongRank + ", " + currentSong.toString());
                 songCount++;
             }
         }
