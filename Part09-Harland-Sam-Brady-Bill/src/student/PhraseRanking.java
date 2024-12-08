@@ -31,7 +31,7 @@ public class PhraseRanking {
             List<Integer> wordIndexes = new ArrayList<>();
 
             while (wordMatcher.find()) {
-                if (word.equals(phraseWords.get(phraseWords.size() - 1))) {
+                if (word.toLowerCase().equals(phraseWords.get(phraseWords.size() - 1).toLowerCase())) {
                     wordIndexes.add(wordMatcher.end() - 1);
                 } else {
                     wordIndexes.add(wordMatcher.start());
@@ -69,11 +69,11 @@ public class PhraseRanking {
                     }
 
                     if (betweenMatch) {
-                        int matchDistance = indexOfLast - indexOfFirst + 1;
+                        int matchDistance = indexOfLast - indexOfFirst;
                         if (matchDistance < smallestCurrentDistance && matchDistance > 0) {
                             smallestCurrentDistance = matchDistance;
-                            bestFirst = leftReference;
-                            bestLast = rightReference;
+                            bestFirst = indexOfFirst - matchers.get(0).size();
+                            bestLast = indexOfLast;
                         }
                     }
 
@@ -81,7 +81,7 @@ public class PhraseRanking {
             }
         }
         if (smallestCurrentDistance > 0 && bestFirst > -1 && bestLast > -1) {
-            String matchSubstring = lyrics.substring(bestFirst, bestLast + 1).replace("\n", "nn");
+            String matchSubstring = lyrics.substring(bestFirst, bestLast).replace("\n", "nn");
             System.out.println(matchSubstring);
             bestSubstring.append(matchSubstring);
             return bestSubstring.length();
