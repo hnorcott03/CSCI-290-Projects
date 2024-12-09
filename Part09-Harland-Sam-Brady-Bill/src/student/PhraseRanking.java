@@ -90,7 +90,6 @@ public class PhraseRanking {
             StringBuilder bestSubstring = new StringBuilder();
             String matchSubstring = lyrics.substring(bestFirst, bestLast).replace("\n", " ");
             bestSubstring.append(matchSubstring);
-            System.out.println(bestSubstring);
             return bestSubstring.length();
         }
         return 0;
@@ -99,14 +98,21 @@ public class PhraseRanking {
     public static void main(String args[]) {
         SongCollection sc = new SongCollection(args[0]);
         int songCount = 0;
+        List<RankedSong> rankedSongs = new ArrayList();
         for (Song currentSong : sc.getAllSongs()) {
             currSong = currentSong;
             int currSongRank = rankPhrase(currentSong.getLyrics(), args[1]);
-            if (currSongRank > 0) {
-                System.out.println(currSongRank + ", " + currentSong.toString());
+            if(currSongRank > 0) {
                 songCount++;
+                RankedSong currPhraseRanked = new RankedSong(currSongRank, currSong);
+                rankedSongs.add(currPhraseRanked);
             }
         }
+        
+        for(RankedSong rankedSong : rankedSongs) {
+            System.out.println(rankedSong.toString());
+        }
+        
         System.out.println("Total matches: " + songCount);
     }
 }
