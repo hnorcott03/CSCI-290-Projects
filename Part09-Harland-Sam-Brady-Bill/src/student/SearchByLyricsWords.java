@@ -130,6 +130,7 @@ public class SearchByLyricsWords {
                 System.out.println("Artist: " + matches[i].getArtist() + ", Title: " + matches[i].getTitle());
             }
         } else {
+
             System.err.println("usage: prog songfile \"lyric words\"");
         }
     }
