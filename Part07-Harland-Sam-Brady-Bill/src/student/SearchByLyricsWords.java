@@ -17,7 +17,7 @@ import java.util.TreeSet;
 public class SearchByLyricsWords {
 
     private Set<String> comWords;
-    private TreeMap<String, TreeSet<Song>> lyricsMap;//make it a class member.
+    private TreeMap<String, TreeSet<Song>> lyricsMap;
 
     public SearchByLyricsWords(SongCollection songCol) {
         String fileName = "../commonWords.txt";
@@ -27,7 +27,7 @@ public class SearchByLyricsWords {
             while (fileScnr.hasNext()) {
                 comWords.add(fileScnr.next().toLowerCase());
             }
-           
+
         } catch (Exception e) {
             System.err.println("usage: prog wordFile");
         }
@@ -38,13 +38,15 @@ public class SearchByLyricsWords {
 
             for (String currWord : words) {
                 TreeSet<Song> tempSet = lyricsMap.get(currWord);
- 
-                if (currWord.length() > 1 && tempSet == null && !comWords.contains(currWord)) {
+
+                if (currWord.length() > 1 && tempSet == null && !comWords.contains(currWord) && !lyricsMap.containsKey(currWord)) {
                     tempSet = new TreeSet<>();
                     tempSet.add(currSong);
                     lyricsMap.put(currWord, tempSet);
-                    System.out.println(currWord + ", " + lyricsMap.get(currWord));
+                } else if (lyricsMap.containsKey(currWord)) {
+                    lyricsMap.get(currWord).add(currSong);
                 }
+
             }
         }
     }
@@ -54,31 +56,32 @@ public class SearchByLyricsWords {
         //1.number of keys in the map
         int numKeys = lyricsMap.size();
         System.out.println("Number of keys in the map: " + numKeys);
-        //iterate thru map 
+        //iterate thru map
         int totalSongRef = 0;
         for (TreeSet<Song> songs : lyricsMap.values()) {
             totalSongRef += songs.size();
         }
         System.out.println("Total number of Song references: " + totalSongRef);
-        
+
         int spaceByMap = numKeys * 32;
         System.out.println("Space used by the map: " + spaceByMap + " bytes");
-        
-        int spaceBySets = totalSongRef * 32; 
+
+        int spaceBySets = totalSongRef * 32;
         System.out.println("Space used by all sets: " + spaceBySets + " bytes");
 
         int totalSpaceUsed = spaceByMap + spaceBySets;
         System.out.println("Total space used by the compound data structure: " + totalSpaceUsed + " bytes");
 
         System.out.println("Space usage as a function of N is O(N)");
-        
+
     }
+
     //test method
     //method for testing, prints all elements in treeset
     public void printSet() {
         Object ar[];
         ar = comWords.toArray();
-        for(int i = 0; i < ar.length; i++) {
+        for (int i = 0; i < ar.length; i++) {
             System.out.println((String) ar[i]);
         }
         System.out.println("Number Common words loaded: " + comWords.size());
@@ -95,5 +98,3 @@ public class SearchByLyricsWords {
         }
     }
 }
-
-
