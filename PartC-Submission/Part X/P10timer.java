@@ -70,7 +70,6 @@ public class P10timer {
         1, 1, 1, 1, 9, 2, 1, 1, 1, 1, 1, 5, 1, 58};
 
     public static void main(String[] args) {
-        System.out.println("22");
         if (args.length == 0) {
             System.err.println("uses arguments: songfile [-verbose]");
             System.err.println("\nTiming results are written to the file:"
