@@ -52,12 +52,12 @@ public class SearchByLyricsWords {
     }
 
     public Song[] search(String lyricsWords) {
-        
+
         String[] wordArr = lyricsWords.toLowerCase().replaceAll("[^a-z ]", " ").split("\\s+");
         TreeSet<Song> searchSet = new TreeSet<>();
         TreeSet<Song> tempSet;
         TreeMap<String, TreeSet<Song>> searchMap = new TreeMap<>();
-        
+
         for (String currWord : wordArr) {
             if (currWord.length() > 1 && !comWords.contains(currWord)) {
                 tempSet = new TreeSet<>();
@@ -69,7 +69,7 @@ public class SearchByLyricsWords {
                 }
             }
         }
-        
+
         searchSet = searchMap.get(searchMap.firstKey());
         for (String currWord : searchMap.keySet()) {
             searchSet.retainAll(searchMap.get(currWord));
@@ -110,7 +110,7 @@ public class SearchByLyricsWords {
     }
 
     public static void main(String[] args) {
-        if (args.length >= 2) {
+        if (args.length > 1) {
             // First argument: name of the song file
             String songFile = args[0];
             // Second argument: string of lyric words to search

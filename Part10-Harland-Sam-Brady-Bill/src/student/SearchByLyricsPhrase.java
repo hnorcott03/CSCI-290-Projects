@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.regex.*;
 
 public class SearchByLyricsPhrase {
+
     private SongCollection songCollection;
 
     public SearchByLyricsPhrase(SongCollection songCollection) {
@@ -35,7 +36,7 @@ public class SearchByLyricsPhrase {
         }
 
         // Sort by rank in descending order (best matches first)
-        rankedSongs.sort((a, b) -> b.getRank() - a.getRank());
+        rankedSongs.sort((a, b) -> a.getRank() - b.getRank());
 
         // Extract songs into an array
         Song[] result = new Song[rankedSongs.size()];
@@ -102,5 +103,24 @@ public class SearchByLyricsPhrase {
         }
 
         return smallestCurrentDistance == Integer.MAX_VALUE ? 0 : smallestCurrentDistance;
+    }
+
+    public static void main(String[] args) {
+
+        SongCollection sc = new SongCollection(args[0]);
+        SearchByLyricsPhrase searchByLP = new SearchByLyricsPhrase(sc);
+
+        Song[] songList = searchByLP.search(args[1]);
+
+        System.out.println("Total songs = " + songList.length + ", first 10 matches");
+        System.out.println("rank artist title");
+
+        for (int i = 0; i < 11; i++) {
+            String lyrics = songList[i].getLyrics();
+            int rank = PhraseRanking.rankPhrase(lyrics, args[1]);
+            System.out.printf("%d %s \"%s\"\n", rank, songList[i].getArtist(),
+                    songList[i].getTitle());
+        }
+
     }
 }
