@@ -51,12 +51,39 @@ public class SearchByLyricsWords {
         }
     }
 
-    //Statistics method
+    public Song[] search(String lyricsWords) {
+        
+        String[] wordArr = lyricsWords.toLowerCase().replaceAll("[^a-z ]", " ").split("\\s+");
+        TreeSet<Song> searchSet = new TreeSet<>();
+        TreeSet<Song> tempSet;
+        TreeMap<String, TreeSet<Song>> searchMap = new TreeMap<>();
+        
+        for (String currWord : wordArr) {
+            if (currWord.length() > 1 && !comWords.contains(currWord)) {
+                tempSet = new TreeSet<>();
+                if (lyricsMap.containsKey(currWord)) {
+                    searchMap.put(currWord, lyricsMap.get(currWord));
+                } else {
+                    tempSet = new TreeSet<>();
+                    searchMap.put(currWord, tempSet);
+                }
+            }
+        }
+        
+        searchSet = searchMap.get(searchMap.firstKey());
+        for (String currWord : searchMap.keySet()) {
+            searchSet.retainAll(searchMap.get(currWord));
+        }
+
+        Song[] matches = searchSet.toArray(new Song[0]);
+
+        return matches;
+    }
+
     public void Statistics() {
-        //1.number of keys in the map
         int numKeys = lyricsMap.size();
         System.out.println("Number of keys in the map: " + numKeys);
-        //iterate thru map
+
         int totalSongRef = 0;
         for (TreeSet<Song> songs : lyricsMap.values()) {
             totalSongRef += songs.size();
@@ -73,28 +100,38 @@ public class SearchByLyricsWords {
         System.out.println("Total space used by the compound data structure: " + totalSpaceUsed + " bytes");
 
         System.out.println("Space usage as a function of N is O(N)");
-
     }
 
-    //test method
-    //method for testing, prints all elements in treeset
     public void printSet() {
-        Object ar[];
-        ar = comWords.toArray();
-        for (int i = 0; i < ar.length; i++) {
-            System.out.println((String) ar[i]);
+        for (Object com : comWords.toArray()) {
+            System.out.println((String) com);
         }
         System.out.println("Number Common words loaded: " + comWords.size());
     }
 
     public static void main(String[] args) {
-        if (args.length > 0) {
-            SongCollection sc = new SongCollection(args[0]);
+        if (args.length >= 2) {
+            // First argument: name of the song file
+            String songFile = args[0];
+            // Second argument: string of lyric words to search
+            String lyricWords = args[1];
+
+            // Load the song collection and initialize the search object
+            SongCollection sc = new SongCollection(songFile);
             SearchByLyricsWords sbl = new SearchByLyricsWords(sc);
-            sbl.printSet();
-            sbl.Statistics();
+
+            // Perform the search
+            Song[] matches = sbl.search(lyricWords);
+
+            // Print the results
+            System.out.println("Total matches found: " + matches.length);
+            System.out.println("First 10 matches:");
+            for (int i = 0; i < Math.min(10, matches.length); i++) {
+                System.out.println("Artist: " + matches[i].getArtist() + ", Title: " + matches[i].getTitle());
+            }
         } else {
-            System.err.println("usage: prog songfile");
+
+            System.err.println("usage: prog songfile \"lyric words\"");
         }
     }
 }
