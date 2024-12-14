@@ -94,42 +94,43 @@ public class PhraseRanking {
         }
         return 0;
     }
-    
+
     public static final Comparator<RankedSong> RankComparator = new Comparator<RankedSong>() {
         @Override
         public int compare(RankedSong a, RankedSong b) {
+
             return a.getRank() - b.getRank();
         }
     };
 
     public static void main(String args[]) {
-        if(args.length < 2){
+        if (args.length < 2) {
             System.out.println("Usage : java PhraseRanking <song_file_path>\"<lyrics_phrase>\"");
             return;
         }
         String songFilepath = args[0];
         String lyricsPhrase = args[1];
-        
+
         SongCollection sc = new SongCollection(songFilepath);
         int songCount = 0;
         List<RankedSong> matches = new ArrayList();
         for (Song currentSong : sc.getAllSongs()) {
             currSong = currentSong;
             int currSongRank = rankPhrase(currentSong.getLyrics(), lyricsPhrase);
-            if(currSongRank > 0) {
+            if (currSongRank > 0) {
                 songCount++;
                 RankedSong currPhraseRanked = new RankedSong(currSongRank, currSong);
                 matches.add(currPhraseRanked);
             }
         }
-        
+
         Collections.sort(matches, RankComparator);
-        
+
         System.out.println("Total matches found: " + matches.size());
         System.out.println("First " + Math.min(10, matches.size()) + " matches:");
         for (int i = 0; i < Math.min(10, matches.size()); i++) {
-                System.out.println(matches.get(i).getRank()
-                        + ", " + matches.get(i).getSong().getTitle());
+            System.out.println(matches.get(i).getRank()
+                    + ", " + matches.get(i).getSong().getTitle());
         }
     }
 }
